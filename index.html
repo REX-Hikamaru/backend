@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript基礎学習サイト</title>
+    <!-- Tailwind CSS CDNを読み込み -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* カスタムスタイル */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* コードブロックのスタイル */
+        .code-area {
+            background-color: #272822; /* Monokai風 */
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+        .code-area pre {
+            /* preタグ内の余分なマージンをリセット */
+            margin: 0;
+        }
+        .section-box {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .section-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        .result-box {
+            min-height: 40px;
+            background-color: #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 0.75rem;
+            color: #1a202c;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        /* sticky-navはモバイルでは非表示、lg以上で表示 */
+        .sticky-nav {
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        /* ボタンアニメーション */
+        .action-button {
+            transition: all 0.15s ease-in-out;
+            box-shadow: 0 4px #1e40af; /* Blue 700 */
+        }
+        .action-button:active {
+            box-shadow: 0 0 #1e40af;
+            transform: translateY(4px);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div id="app" class="flex min-h-screen">
+        
+        <!-- サイドバー（目次） - lg以上の画面幅で表示 -->
+        <nav class="sticky-nav w-64 bg-gray-900 text-white p-6 hidden lg:block">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-400">目次</h2>
+            <ul id="toc-list" class="space-y-3 text-sm">
+                <!-- JSでコンテンツを生成します -->
+            </ul>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-1 p-6 md:p-10 lg:p-12">
+            <header class="mb-10 pb-6 border-b-4 border-indigo-500">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">
+                    🚀 JavaScript 基礎学習サイト
+                </h1>
+                <p class="mt-2 text-lg text-gray-600">
+                    関数、変数、データ型から制御構造まで、JavaScriptの基本を学んで実践しましょう。
+                </p>
+            </header>
+
+            <div id="content-area">
+                <!-- 学習コンテンツはJSで生成されます -->
+            </div>
+
+            <footer class="mt-16 pt-8 border-t border-gray-300 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 JavaScript基礎学習</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // グローバルな学習コンテンツ定義
+        const sections = [
+            {
+                id: 'function',
+                title: '関数 (Function)',
+                description: '特定のタスクを実行するための一連のステートメントをまとめたものです。コードの再利用と整理に役立ちます。**引数 (Arguments)** を受け取り、**戻り値 (Return Value)** を返すことができます。',
+                topics: ['関数', '引数', '戻り値'],
+                code: 'function multiply(a, b) {\n  return a * b;\n}\n\n// 実行例:\nconst result = multiply(5, 8);\n// 結果をresultという変数に格納しました',
+                example: (outputId) => {
+                    function multiply(a, b) {
+                        return a * b;
+                    }
+                    const result = multiply(5, 8);
+                    document.getElementById(outputId).textContent = `実行結果: 5 * 8 = ${result}\n\nコード内の変数'result'の値は ${result} です。`;
+                }
+            },
+            {
+                id: 'variable',
+                title: '変数と定数',
+                description: 'データを格納するための名前付きコンテナです。**変数 (let)** は値を再代入できますが、**定数 (const)** は一度値を設定すると再代入できません。`var`は古い記述で、通常は`let`と`const`を使用します。',
+                topics: ['変数 (let)', '定数 (const)', 'スコープ'],
+                code: '// 変数 (let) は値を変更可能\nlet count = 10;\ncount = 20;\n\n// 定数 (const) は値を変更不可\nconst PI = 3.14159;\n\n// 実行例: count + PI の合計を計算',
+                example: (outputId) => {
+                    let count = 10;
+                    count = 20;
+                    const PI = 3.14159;
+                    document.getElementById(outputId).textContent = `実行結果:\nlet count の最終的な値: ${count}\nconst PI の値: ${PI}\n合計: ${count + PI}`;
+                }
+            },
+            {
+                id: 'datatypes',
+                title: 'データ型 (Data Types)',
+                description: 'JavaScriptで扱うデータの種類です。主な型には、**整数**・**浮動小数点数**（どちらもNumber型）、**文字列**、**論理値**、**オブジェクト**、**NULL**などがあります。`typeof`演算子で型を調べることができます。',
+                topics: ['整数', '浮動小数点数', '文字列', '論理値', 'オブジェクト', 'NULL'],
+                code: 'let num = 42;         // 整数 (Number)\nlet float = 3.14;     // 浮動小数点数 (Number)\nlet text = "Hello JS";  // 文字列 (String)\nlet isTrue = true;    // 論理値 (Boolean)\nlet obj = { key: "value" }; // オブジェクト (Object)\nlet empty = null;     // NULL (特殊なケースでtypeofはobject)',
+                example: (outputId) => {
+                    let num = 42; 
+                    let float = 3.14; 
+                    let text = "Hello JS"; 
+                    let isTrue = true; 
+                    let obj = { key: "value" }; 
+                    let empty = null; 
+                    
+                    document.getElementById(outputId).textContent = 
+                        `実行結果 (typeof):\n` +
+                        `42 (整数) の型: ${typeof num}\n` +
+                        `3.14 (浮動小数点数) の型: ${typeof float}\n` +
+                        `"Hello" (文字列) の型: ${typeof text}\n` +
+                        `true (論理値) の型: ${typeof isTrue}\n` +
+                        `{...} (オブジェクト) の型: ${typeof obj}\n` +
+                        `null (NULL) の型: ${typeof empty} (※特殊な動作)`;
+                }
+            },
+            {
+                id: 'operators',
+                title: '演算子 (Operators)',
+                description: '値に対して何らかの操作（演算）を行うための記号です。**算術演算子**（+,-,*,/,%など）、**比較演算子**（>,<,===など）、**論理演算子**（&&,||,!など）、**代入演算子**（=,+=など）があります。',
+                topics: ['算術演算子', '比較演算子', '論理演算子', '代入演算子'],
+                code: 'let a = 10;\nlet b = 3;\n\n// 算術演算子: a % b (余り)\nconst modulo = a % b;\n\n// 比較演算子: a > b\nconst isGreater = a > b;\n\n// 論理演算子: a > 5 && b < 5\nconst logicalAnd = a > 5 && b < 5;\n\n// 代入演算子: a += 5\na += 5;',
+                example: (outputId) => {
+                    let a = 10;
+                    let b = 3;
+                    const modulo = a % b;
+                    const isGreater = a > b;
+                    const logicalAnd = a > 5 && b < 5;
+                    a += 5; // 実行によりaは15になる
+
+                    document.getElementById(outputId).textContent = 
+                        `実行結果:\n` +
+                        `算術 (10 % 3): ${modulo} (余り)\n` +
+                        `比較 (10 > 3): ${isGreater} (論理値)\n` +
+                        `論理 (10 > 5 && 3 < 5): ${logicalAnd} (論理値)\n` +
+                        `代入 (a += 5)後のa: ${a}`;
+                }
+            },
+            {
+                id: 'control-flow',
+                title: '制御構造 (Control Flow)',
+                description: 'プログラムの実行順序を決定する構造です。**条件分岐** (`if/else`, `switch`) は条件に応じて処理を変え、**繰り返し (ループ)** (`for`, `while`) は同じ処理を何度も実行します。',
+                topics: ['条件分岐', '繰り返し (ループ)'],
+                code: 'let score = 85;\nlet message = "";\n\n// 条件分岐 (if)\nif (score >= 80) {\n  message = "合格です！";\n} else {\n  message = "もう少し頑張りましょう。";\n}\n\n// 繰り返し (forループ)\nlet sum = 0;\nfor (let i = 1; i <= 3; i++) {\n  sum += i; // 1 + 2 + 3\n}',
+                example: (outputId) => {
+                    let score = 85;
+                    let message = "";
+                    if (score >= 80) {
+                        message = "合格です！";
+                    } else {
+                        message = "もう少し頑張りましょう。";
+                    }
+                    let sum = 0;
+                    for (let i = 1; i <= 3; i++) {
+                        sum += i;
+                    }
+                    document.getElementById(outputId).textContent = 
+                        `実行結果:\n` +
+                        `条件分岐メッセージ (score=${score}): ${message}\n` +
+                        `繰り返し (1から3の合計): ${sum}`;
+                }
+            },
+            {
+                id: 'array-object',
+                title: '配列とオブジェクト (Array & Object) / クラス',
+                description: '複数の値をまとめて扱うための構造です。**配列 (Array)** は順序付きのリストで、**オブジェクト (Object)** はキーと値のペア（プロパティ）の集まりです。**クラス**はオブジェクトを作成するための設計図です。',
+                topics: ['配列', 'オブジェクト', 'クラスとオブジェクト'],
+                code: '// 配列: 順序付きのリスト\nconst colors = ["Red", "Green", "Blue"];\nconst firstColor = colors[0];\n\n// オブジェクト: キーと値のペア\nconst user = {\n  name: "Taro",\n  age: 25\n};\nconst userName = user.name;\n\n// クラスの定義とインスタンス化\nclass Cat { constructor(n) { this.name = n; } }\nconst tama = new Cat("Tama");',
+                example: (outputId) => {
+                    const colors = ["Red", "Green", "Blue"];
+                    const firstColor = colors[0];
+                    const user = { name: "Taro", age: 25 };
+                    const userName = user.name;
+                    class Cat { constructor(n) { this.name = n; } }
+                    const tama = new Cat("Tama");
+                    
+                    document.getElementById(outputId).textContent = 
+                        `実行結果:\n` +
+                        `配列 (colors[0]): ${firstColor}\n` +
+                        `オブジェクト (user.name): ${userName}\n` +
+                        `クラスインスタンス (tama.name): ${tama.name}`;
+                }
+            }
+        ];
+
+        // ページロード時に実行される関数
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent();
+            setupEventListeners();
+        });
+
+        // コンテンツと目次をレンダリングする関数
+        function renderContent() {
+            const contentArea = document.getElementById('content-area');
+            const tocList = document.getElementById('toc-list');
+            contentArea.innerHTML = '';
+            tocList.innerHTML = '';
+
+            sections.forEach(section => {
+                // 1. メインコンテンツセクションの生成
+                const sectionHtml = `
+                    <section id="${section.id}" class="section-box">
+                        <h2 class="text-3xl font-bold mb-4 text-indigo-600 border-b-2 pb-2">${section.title}</h2>
+                        <div class="mb-4">
+                            <p class="text-gray-700 leading-relaxed">${section.description}</p>
+                            <div class="mt-4 text-sm text-indigo-500 font-medium">
+                                関連トピック: ${section.topics.map(t => `<span class="inline-block bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full mr-2 my-1">${t}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">実践 (Practice)</h3>
+                        <p class="text-sm text-gray-500 mb-3">下のコードブロックは、トピックを理解するための実行例です。「コードを実行」ボタンを押して結果を確認しましょう。</p>
+
+                        <div class="code-area">
+                            <pre>${section.code}</pre>
+                        </div>
+
+                        <button 
+                            data-section-id="${section.id}"
+                            class="action-button mt-4 px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 shadow-indigo-700">
+                            コードを実行
+                        </button>
+
+                        <div id="result-${section.id}" class="result-box text-sm">
+                            （ここに実行結果が表示されます）
+                        </div>
+                    </section>
+                `;
+                contentArea.insertAdjacentHTML('beforeend', sectionHtml);
+
+                // 2. 目次のリンク生成
+                const tocItem = `
+                    <li>
+                        <a href="#${section.id}" class="block py-2 px-3 rounded-lg hover:bg-indigo-700 transition duration-150 ease-in-out">
+                            ${section.title}
+                        </a>
+                    </li>
+                `;
+                tocList.insertAdjacentHTML('beforeend', tocItem);
+            });
+        }
+
+        // イベントリスナーを設定する関数
+        function setupEventListeners() {
+            document.querySelectorAll('.action-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const sectionId = e.target.getAttribute('data-section-id');
+                    executeCode(sectionId);
+                });
+            });
+
+            // スムーズスクロールを有効にする
+            document.querySelectorAll('#toc-list a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 20, // 少し上を空ける
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // コードを実行する関数 (各セクションのexample関数を呼び出す)
+        function executeCode(sectionId) {
+            const section = sections.find(s => s.id === sectionId);
+            const outputId = `result-${sectionId}`;
+            const resultBox = document.getElementById(outputId);
+            
+            // エラー表示用のクラスをリセット
+            resultBox.classList.remove('bg-red-200', 'text-red-800');
+            resultBox.classList.add('bg-e2e8f0', 'text-1a202c');
+
+            if (section && section.example) {
+                try {
+                    // 各セクションに定義された実行ロジックを呼び出す
+                    section.example(outputId);
+                    
+                    // 実行ボタンの色を一時的に変更してフィードバック
+                    const button = document.querySelector(`[data-section-id="${sectionId}"]`);
+                    button.classList.add('bg-green-600', 'shadow-green-700');
+                    button.classList.remove('bg-indigo-600', 'shadow-indigo-700');
+                    setTimeout(() => {
+                        button.classList.remove('bg-green-600', 'shadow-green-700');
+                        button.classList.add('bg-indigo-600', 'shadow-indigo-700');
+                    }, 500);
+                } catch (error) {
+                    resultBox.textContent = `エラーが発生しました: ${error.message}`;
+                    resultBox.classList.add('bg-red-200', 'text-red-800');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
