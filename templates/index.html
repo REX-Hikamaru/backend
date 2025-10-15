@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プログラミング基礎 学習サイト</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>ぷちプログラミングラボ 🐰</h1>
+    <div class="controls">
+      <label for="lang">言語:</label>
+      <select id="lang">
+        <option value="python" selected>Python</option>
+        <option value="php">PHP</option>
+        <option value="java">Java</option>
+        <option value="ruby">Ruby</option>
+        <option value="node">Node.js</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="topics" class="grid">
+      {% for key, value in topics.items() %}
+      <article class="card" data-key="{{ key }}">
+        <h2 class="card-title">{{ key }}</h2>
+        <p class="desc">{{ value["説明"] }}</p>
+        <pre class="example"><code id="code-{{ loop.index0 }}">{{ value["例"]["python"] if value["例"].get('python') else value["例"] }}</code></pre>
+        <div class="card-actions">
+          <button class="copy-btn">コピー</button>
+          <button class="load-btn">エディタに読み込む</button>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+
+    <aside class="runner">
+      <h3>コード実行エリア（Pythonのみ実行）</h3>
+      <textarea id="editor" rows="10" placeholder="ここにコードを入力..."></textarea>
+      <div class="runner-controls">
+        <button id="run-btn">実行</button>
+        <span id="status" class="status">準備OK</span>
+      </div>
+      <pre id="output" class="output">出力がここに表示されます</pre>
+    </aside>
+  </main>
+
+  <footer class="site-footer">学習用サンプル — 実行はローカルの Python サーバーでのみ動作します</footer>
+
+ <div id="topics-container"></div>
+
+  <!-- JSONを直接埋め込み。JSON.parse不要 -->
+  <script id="topics-data" type="application/json">
+    {{ topics | tojson | safe }}
+  </script>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</html>
